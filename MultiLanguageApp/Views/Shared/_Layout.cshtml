@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<SharedResource> Localizer
+
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -32,6 +38,12 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+
+            <div>
+                <a href="?culture=en">English</a>
+                <a href="?culture=bn">বাংলা</a>
+            </div>
+
             @RenderBody()
         </main>
     </div>
