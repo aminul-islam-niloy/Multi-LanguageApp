@@ -1,22 +1,34 @@
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using MultiLanguageApp.Data;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews()
-    .AddViewLocalization()
+
+
+builder.Services.AddMvc()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
 
-
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
 var app = builder.Build();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en-US", "de-DE" };
+    options.SetDefaultCulture(supportedCultures[0])
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
+});
+
+app.UseRequestLocalization();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -30,19 +42,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// Configure localization middleware
-var supportedCultures = new[] { "en", "bn" };
-var localizationOptions = new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture("en"),
-    SupportedCultures = supportedCultures.Select(c => new System.Globalization.CultureInfo(c)).ToList(),
-    SupportedUICultures = supportedCultures.Select(c => new System.Globalization.CultureInfo(c)).ToList()
-};
-
-// Add query string provider
-localizationOptions.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
-
-app.UseRequestLocalization(localizationOptions);
 
 
 app.UseAuthorization();

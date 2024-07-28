@@ -1,6 +1,6 @@
 ﻿@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject IStringLocalizer<SharedResource> Localizer
-
 
 
 
@@ -40,8 +40,8 @@
         <main role="main" class="pb-3">
 
             <div>
-                <a href="?culture=en">English</a>
-                <a href="?culture=bn">বাংলা</a>
+                <a href="?culture=en-EN">English</a>
+                <a href="?culture=de-DE">বাংলা</a>
             </div>
 
             @RenderBody()
